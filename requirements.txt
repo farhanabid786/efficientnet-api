@@ -1,0 +1,25 @@
+# EfficientNet-B4 API — requirements.txt
+# CPU-only: no CUDA packages → smaller install, lower RAM usage
+
+# ── PyTorch CPU-only (MUST install this way — pip index for cpu build) ──────
+# Render's build command handles this via pip flags in render.yaml.
+# If installing manually:
+#   pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
+torch
+torchvision
+
+# ── Model architecture ───────────────────────────────────────────────────────
+timm>=1.0.3
+
+# ── Computer vision ──────────────────────────────────────────────────────────
+opencv-python-headless>=4.9.0   # headless = no GUI deps, smaller on server
+Pillow>=10.3.0
+
+# ── Web framework ────────────────────────────────────────────────────────────
+fastapi>=0.111.0
+uvicorn[standard]>=0.29.0
+python-multipart>=0.0.9         # required for UploadFile
+
+# ── Utilities ────────────────────────────────────────────────────────────────
+numpy>=1.26.0
+gdown>=5.1.0                    # Google Drive downloader

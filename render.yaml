@@ -1,0 +1,37 @@
+# render.yaml — EfficientNet-B4 Deepfake Detection API
+# Deploy this file in the root of your GitHub repo for this service.
+# Docs: https://render.com/docs/blueprint-spec
+
+services:
+  - type: web
+    name: deepfake-efficientnet-api
+    runtime: python
+    region: oregon              # choose closest to your users
+
+    # ── Build ───────────────────────────────────────────────────────────────
+    # Install CPU-only PyTorch first (avoids pulling 2 GB CUDA binaries),
+    # then install the rest of requirements.txt.
+    buildCommand: >
+      pip install --upgrade pip &&
+      pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu &&
+      pip install -r requirements.txt
+
+    # ── Start ───────────────────────────────────────────────────────────────
+    # start.sh downloads the model then launches uvicorn.
+    startCommand: bash start.sh
+
+    # ── Plan ────────────────────────────────────────────────────────────────
+    # Free tier: 512 MB RAM.  EfficientNet-B4 (78 MB) loads fine on CPU.
+    # If you see OOM errors, upgrade to Starter ($7/mo = 512 MB dedicated RAM).
+    plan: free
+
+    # ── Environment variables ───────────────────────────────────────────────
+    envVars:
+      - key: MODEL_GDRIVE_ID
+        value: "1xigFpgBhZrlwRn4FWX8LZaf7_Rq5E7G3"   # your .pth file ID
+      - key: MODEL_PATH
+        value: "models/best_model_v3.pth"
+      - key: DETECTOR_DIR
+        value: "models/face_detector"
+      - key: PYTHON_VERSION
+        value: "3.11.0"
